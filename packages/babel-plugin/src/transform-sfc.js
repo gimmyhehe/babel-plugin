@@ -35,17 +35,17 @@ ${styles.map(generateTagContent).join('\n')}
 `
 }
 
-export const transformSFC = (code) => {
+export const transformSFC = (code, id) => {
   const { descriptor } = parse(code)
   const { script, scriptSetup } = descriptor
   if (!isCallEntryFile(code) || (!script && !scriptSetup)) {
     return
   }
   if (script) {
-    script.content = transform(script.content) || script.content
+    script.content = transform(script.content, id) || script.content
   }
   if (scriptSetup) {
-    scriptSetup.content = transform(scriptSetup.content) || scriptSetup.content
+    scriptSetup.content = transform(scriptSetup.content, id) || scriptSetup.content
   }
   return generateSFC(descriptor)
 }

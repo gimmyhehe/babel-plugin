@@ -10,14 +10,27 @@ import {
   BEFORE_CALLENTRY,
   AFTER_CALLENTRY,
   isCallEntryFile,
-  isHasGetCurrentInstance
+  isHasGetCurrentInstance,
+  getMeataPath
 } from './utils.js'
+
 
 const generateTraverse = traverse.default
 
-export const transform = (code) => {
+
+export const transform = (code, id) => {
   // 如果不包含callEntry的文字直接退出
   if (!isCallEntryFile(code)) {
+    return
+  }
+
+  // 本次转换保存的状态
+  const state = {}
+
+  // 找不到meta.js告警并返回
+  const metaPath = getMeataPath(id)
+  if (!metaPath) {
+    console.log('找不到对应的meta.js')
     return
   }
 
@@ -35,22 +48,22 @@ export const transform = (code) => {
 
       // 只有拿到函数的名称才可以被复写
       if (functionName) {
-        wrapEntryFuncNode({ path, functionName })
+        wrapEntryFuncNode({ path, functionName, metaDataName: state.metaDataName, getInstanceName: state.getInstanceName })
       }
     },
-    ImportDeclaration(path) {
-      const source = path.node?.source?.value
-      if (
-        source === 'vue' &&
-        path.node.specifiers &&
-        !isHasGetCurrentInstance(path.node.specifiers)
-      ) {
-        const ast = template.statement(
-          `import { getCurrentInstance } from 'vue'`
-        )()
-        path.node.specifiers.push(...ast.specifiers)
-      }
-    },
+    // ImportDeclaration(path) {
+    //   const source = path.node?.source?.value
+    //   if (
+    //     source === 'vue' &&
+    //     path.node.specifiers &&
+    //     !isHasGetCurrentInstance(path.node.specifiers)
+    //   ) {
+    //     const ast = template.statement(
+    //       `import { getCurrentInstance } from 'vue'`
+    //     )()
+    //     path.node.specifiers.push(...ast.specifiers)
+    //   }
+    // },
     Program(path) {
       const code = path.toString()
       if (!code.includes(COMMON_PACKAGE_NAME)) {
@@ -61,18 +74,19 @@ export const transform = (code) => {
         )
       }
 
-      // 如果没有引入vue则自动添加vue依赖
-      if (!/from ['"]vue['"]/.test(code)) {
+      const getInstanceName = path.scope.generateUid('getCurrentInstance')
+      state.getInstanceName = getInstanceName
         path.node.body.unshift(
-          template.statement(`import { getCurrentInstance } from 'vue'`)()
+          template.statement(`import { getCurrentInstance as ${getInstanceName} } from 'vue'`)()
         )
-      }
 
-      if (!code.includes('/meta')) {
+ 
+        const metaDataName = path.scope.generateUid('metaData')
+        state.metaDataName = metaDataName
         path.node.body.unshift(
-          template.statement(`import metaData from '../meta.js'`)()
+          template.statement(`import ${metaDataName} from '${metaPath}'`)()
         )
-      }
+      
     }
   })
 

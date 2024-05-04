@@ -1,7 +1,8 @@
-import metaData from '../meta.js';
+import _metaData from '../../meta.js';
+import { getCurrentInstance as _getCurrentInstance } from 'vue';
 import { callEntry, beforeCallEntry, afterCallEntry } from '@opentiny/tiny-engine-common';
 /* callEntry */
-import { reactive, getCurrentInstance } from 'vue';
+import { reactive } from 'vue';
 import { deepCopy } from 'loash-es';
 export const useRenderless = callEntry(({
   props
@@ -10,69 +11,45 @@ export const useRenderless = callEntry(({
     tableData: props.data || props.op.data || []
   });
   beforeCallEntry({
-    metaData: {
-      id: `${metaData.id}.logMessage`
+    _metaData: {
+      id: `${_metaData.id}.logMessage`
     },
-    instance: getCurrentInstance(),
+    instance: _getCurrentInstance(),
     utils: {
-      props,
-      state,
-      logMessage,
-      handleClick,
-      sendMessage,
       reactive,
-      deepCopy,
-      useRenderless
+      deepCopy
     }
   });
   const logMessage = callEntry(() => {
     console.log('我是纯函数我不需要闭包参数');
   }, {
-    metaData: {
-      id: `${metaData.id}.logMessage`
+    _metaData: {
+      id: `${_metaData.id}.logMessage`
     },
-    instance: getCurrentInstance(),
+    instance: _getCurrentInstance(),
     utils: {
-      props,
-      state,
-      logMessage,
-      handleClick,
-      sendMessage,
       reactive,
-      deepCopy,
-      useRenderless
+      deepCopy
     }
   });
   afterCallEntry({
-    metaData: {
-      id: `${metaData.id}.logMessage`
+    _metaData: {
+      id: `${_metaData.id}.logMessage`
     },
-    instance: getCurrentInstance(),
+    instance: _getCurrentInstance(),
     utils: {
-      props,
-      state,
-      logMessage,
-      handleClick,
-      sendMessage,
       reactive,
-      deepCopy,
-      useRenderless
+      deepCopy
     }
   });
   beforeCallEntry({
-    metaData: {
-      id: `${metaData.id}.handleClick`
+    _metaData: {
+      id: `${_metaData.id}.handleClick`
     },
-    instance: getCurrentInstance(),
+    instance: _getCurrentInstance(),
     utils: {
-      props,
-      state,
-      logMessage,
-      handleClick,
-      sendMessage,
       reactive,
-      deepCopy,
-      useRenderless
+      deepCopy
     }
   });
   const handleClick = callEntry(e => {
@@ -83,85 +60,55 @@ export const useRenderless = callEntry(({
       enUS: 'TinyEngine'
     });
   }, {
-    metaData: {
-      id: `${metaData.id}.handleClick`
+    _metaData: {
+      id: `${_metaData.id}.handleClick`
     },
-    instance: getCurrentInstance(),
+    instance: _getCurrentInstance(),
     utils: {
-      props,
-      state,
-      logMessage,
-      handleClick,
-      sendMessage,
       reactive,
-      deepCopy,
-      useRenderless
+      deepCopy
     }
   });
   afterCallEntry({
-    metaData: {
-      id: `${metaData.id}.handleClick`
+    _metaData: {
+      id: `${_metaData.id}.handleClick`
     },
-    instance: getCurrentInstance(),
+    instance: _getCurrentInstance(),
     utils: {
-      props,
-      state,
-      logMessage,
-      handleClick,
-      sendMessage,
       reactive,
-      deepCopy,
-      useRenderless
+      deepCopy
     }
   });
   beforeCallEntry({
-    metaData: {
-      id: `${metaData.id}.sendMessage`
+    _metaData: {
+      id: `${_metaData.id}.sendMessage`
     },
-    instance: getCurrentInstance(),
+    instance: _getCurrentInstance(),
     utils: {
-      props,
-      state,
-      logMessage,
-      handleClick,
-      sendMessage,
       reactive,
-      deepCopy,
-      useRenderless
+      deepCopy
     }
   });
   const sendMessage = callEntry(() => {
     logMessage('自定义是的范德萨');
   }, {
-    metaData: {
-      id: `${metaData.id}.sendMessage`
+    _metaData: {
+      id: `${_metaData.id}.sendMessage`
     },
-    instance: getCurrentInstance(),
+    instance: _getCurrentInstance(),
     utils: {
-      props,
-      state,
-      logMessage,
-      handleClick,
-      sendMessage,
       reactive,
-      deepCopy,
-      useRenderless
+      deepCopy
     }
   });
   afterCallEntry({
-    metaData: {
-      id: `${metaData.id}.sendMessage`
+    _metaData: {
+      id: `${_metaData.id}.sendMessage`
     },
-    instance: getCurrentInstance(),
+    instance: _getCurrentInstance(),
     utils: {
-      props,
-      state,
-      logMessage,
-      handleClick,
-      sendMessage,
       reactive,
-      deepCopy,
-      useRenderless
+      deepCopy
     }
   });
   return {
@@ -170,13 +117,5 @@ export const useRenderless = callEntry(({
     sendMessage
   };
 }, {
-  metaData: {
-    id: `${metaData.id}.useRenderless`
-  },
-  instance: getCurrentInstance(),
-  utils: {
-    reactive,
-    deepCopy,
-    useRenderless
-  }
+  _metaData
 });

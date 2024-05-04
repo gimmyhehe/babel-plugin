@@ -1,4 +1,6 @@
 import template from '@babel/template'
+import path from 'node:path'
+import fs from 'node:fs'
 
 export const CALLENTRY = 'callEntry'
 export const BEFORE_CALLENTRY = 'beforeCallEntry'
@@ -11,14 +13,14 @@ export const isCallEntryFile = (code) => {
 }
 
 // 将注释中的参数提取出来，并组合成目前参数格式
-export const getEntryParam = (functionName = '', utils) => {
-  if (functionName) {
-    return `{ metaData: { id: \`\${metaData.id}.${functionName}\` }, instance: getCurrentInstance(), utils: {${Object.keys(
+export const getEntryParam = ({ functionName = '', utils, metaDataName, getInstanceName }) => {
+  if (functionName && functionName!== 'useRenderless') {
+    return `{ ${metaDataName}: { id: \`\${${metaDataName}.id}.${functionName}\` }, instance: ${getInstanceName}(), utils: {${Object.keys(
       utils
     ).join(',')}} }`
   }
 
-  return '{ metaData }'
+  return `{ ${metaDataName} }`
 }
 
 const getParentVariableDeclaration = (path) => {
@@ -44,7 +46,7 @@ const generateBeforeAfterEntry = ({ path, beforeEntryAst, afterEntryAst }) => {
   }
 }
 
-const getOuterBingdings = (path) => {
+export const getOuterBingdings = (path) => {
   const outerBindings = {}
   const allBindings = path.scope.getAllBindings()
   const selfBindings = path.scope.bindings
@@ -56,10 +58,21 @@ const getOuterBingdings = (path) => {
   return outerBindings
 }
 
+export const getModuleBindings = (path) => {
+  const moduleBindings = {}
+  const allBindings = path.scope.getAllBindings()
+  Object.keys(allBindings).forEach((key) => {
+    if (allBindings[key].kind === 'module') {
+      moduleBindings[key] = allBindings[key]
+    }
+  })
+  return moduleBindings
+}
+
 // 生成callEntry表达式并包裹当前函数，如果有参与还需要处理参数
-export const wrapEntryFuncNode = ({ path, functionName }) => {
-  const utils = getOuterBingdings(path)
-  const entryParam = getEntryParam(functionName, utils)
+export const wrapEntryFuncNode = ({ path, functionName, metaDataName, getInstanceName }) => {
+  const utils = getModuleBindings(path)
+  const entryParam = getEntryParam({functionName, utils, metaDataName, getInstanceName})
   const entryAst = template.statement(`${CALLENTRY}(${entryParam})`)()
   const beforeEntryAst = template.statement(
     `${BEFORE_CALLENTRY}(${entryParam})`
@@ -80,4 +93,35 @@ export const isHasGetCurrentInstance = (specifiers) => {
   return specifiers.some((item) => {
     return item.imported.name === 'getCurrentInstance'
   })
+}
+
+// 获取两个文件路径的相对路径，入参为两个文件绝对路径
+export const getRelFilePath = (path1, path2) => {
+  const dir1 = path.join(path1, '..')
+  const dir2 = path.join(path2, '..')
+  const relPath = path.relative(dir1, dir2) || '.'
+  return `${relPath}/${path.basename(path2)}`.replaceAll('\\', '/')
+}
+
+// 向上获取meta.js的相对路径
+export const getMeataPath = (id) => {
+  let tempPath = path.join(id, '../meta.js')
+
+  const endCondition = () => {
+    // 找到了meta.js
+    const findMeta = fs.existsSync(tempPath)
+    // 发现了package.json说明到达子包根目录
+    const isSubRoot = fs.existsSync(path.join(tempPath, '../package.json'))
+    // 到达系统根节点，防止死循环
+    const isRoot = tempPath === path.join(tempPath, '../../meta.js')
+    return findMeta || isSubRoot || isRoot
+  }
+
+  while (!endCondition()) {
+    tempPath = path.join(tempPath, '../../meta.js')
+  }
+  if (fs.existsSync(tempPath)) {
+    return getRelFilePath(id, tempPath)
+  }
+  return null
 }

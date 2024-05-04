@@ -7,12 +7,12 @@ export default function () {
     enforce: 'pre',
     transform(code, id) {
       if (id.endsWith('.vue')) {
-        const result = transformSFC(code)
+        const result = transformSFC(code, id)
         return result
       }
 
       if (id.endsWith('.js') || id.endsWith('.jsx') || id.endsWith('.ts')) {
-        const result = transform(code)
+        const result = transform(code, id)
         return result
       }
     }
