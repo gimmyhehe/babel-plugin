@@ -16,11 +16,21 @@ export const useRenderless = callEntry(({
     },
     instance: _getCurrentInstance(),
     utils: {
+      props,
+      state,
+      logMessage,
+      aaa,
+      handleClick,
+      bbb,
+      sendMessage,
+      ttt,
       reactive,
-      deepCopy
+      deepCopy,
+      useRenderless
     }
   });
   const logMessage = callEntry(() => {
+    const t = '123';
     console.log('我是纯函数我不需要闭包参数');
   }, {
     _metaData: {
@@ -28,8 +38,17 @@ export const useRenderless = callEntry(({
     },
     instance: _getCurrentInstance(),
     utils: {
+      props,
+      state,
+      logMessage,
+      aaa,
+      handleClick,
+      bbb,
+      sendMessage,
+      ttt,
       reactive,
-      deepCopy
+      deepCopy,
+      useRenderless
     }
   });
   afterCallEntry({
@@ -38,18 +57,37 @@ export const useRenderless = callEntry(({
     },
     instance: _getCurrentInstance(),
     utils: {
+      props,
+      state,
+      logMessage,
+      aaa,
+      handleClick,
+      bbb,
+      sendMessage,
+      ttt,
       reactive,
-      deepCopy
+      deepCopy,
+      useRenderless
     }
   });
+  const aaa = 123;
   beforeCallEntry({
     _metaData: {
       id: `${_metaData.id}.handleClick`
     },
     instance: _getCurrentInstance(),
     utils: {
+      props,
+      state,
+      logMessage,
+      aaa,
+      handleClick,
+      bbb,
+      sendMessage,
+      ttt,
       reactive,
-      deepCopy
+      deepCopy,
+      useRenderless
     }
   });
   const handleClick = callEntry(e => {
@@ -65,8 +103,17 @@ export const useRenderless = callEntry(({
     },
     instance: _getCurrentInstance(),
     utils: {
+      props,
+      state,
+      logMessage,
+      aaa,
+      handleClick,
+      bbb,
+      sendMessage,
+      ttt,
       reactive,
-      deepCopy
+      deepCopy,
+      useRenderless
     }
   });
   afterCallEntry({
@@ -75,18 +122,37 @@ export const useRenderless = callEntry(({
     },
     instance: _getCurrentInstance(),
     utils: {
+      props,
+      state,
+      logMessage,
+      aaa,
+      handleClick,
+      bbb,
+      sendMessage,
+      ttt,
       reactive,
-      deepCopy
+      deepCopy,
+      useRenderless
     }
   });
+  const bbb = 321;
   beforeCallEntry({
     _metaData: {
       id: `${_metaData.id}.sendMessage`
     },
     instance: _getCurrentInstance(),
     utils: {
+      props,
+      state,
+      logMessage,
+      aaa,
+      handleClick,
+      bbb,
+      sendMessage,
+      ttt,
       reactive,
-      deepCopy
+      deepCopy,
+      useRenderless
     }
   });
   const sendMessage = callEntry(() => {
@@ -97,8 +163,17 @@ export const useRenderless = callEntry(({
     },
     instance: _getCurrentInstance(),
     utils: {
+      props,
+      state,
+      logMessage,
+      aaa,
+      handleClick,
+      bbb,
+      sendMessage,
+      ttt,
       reactive,
-      deepCopy
+      deepCopy,
+      useRenderless
     }
   });
   afterCallEntry({
@@ -107,10 +182,22 @@ export const useRenderless = callEntry(({
     },
     instance: _getCurrentInstance(),
     utils: {
+      props,
+      state,
+      logMessage,
+      aaa,
+      handleClick,
+      bbb,
+      sendMessage,
+      ttt,
       reactive,
-      deepCopy
+      deepCopy,
+      useRenderless
     }
   });
+  function ttt() {
+    logMessage('自定义是的范德萨');
+  }
   return {
     state,
     handleClick,

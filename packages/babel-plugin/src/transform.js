@@ -25,7 +25,9 @@ export const transform = (code, id) => {
   }
 
   // 本次转换保存的状态
-  const state = {}
+  const state = {
+    varDeclartion: new Map()
+  }
 
   // 找不到meta.js告警并返回
   const metaPath = getMeataPath(id)
@@ -48,22 +50,26 @@ export const transform = (code, id) => {
 
       // 只有拿到函数的名称才可以被复写
       if (functionName) {
+        
+        const allBindings = path.scope.getAllBindings()
+        const selfBindings = path.scope.bindings
+        const varDeclartion = state.varDeclartion
+        console.log(allBindings.aaa.value)
+        debugger
         wrapEntryFuncNode({ path, functionName, metaDataName: state.metaDataName, getInstanceName: state.getInstanceName })
       }
     },
-    // ImportDeclaration(path) {
-    //   const source = path.node?.source?.value
-    //   if (
-    //     source === 'vue' &&
-    //     path.node.specifiers &&
-    //     !isHasGetCurrentInstance(path.node.specifiers)
-    //   ) {
-    //     const ast = template.statement(
-    //       `import { getCurrentInstance } from 'vue'`
-    //     )()
-    //     path.node.specifiers.push(...ast.specifiers)
-    //   }
-    // },
+    VariableDeclaration(path) {
+      const name = path.node.declarations[0].id.name
+      const block = path.scope.block 
+      if (!state.varDeclartion.has(block)) {
+        const arr = [name]
+        state.varDeclartion.set(block, arr)
+      } else {
+        const arr = state.varDeclartion.get(block)
+        arr.push(name)
+      }
+    },
     Program(path) {
       const code = path.toString()
       if (!code.includes(COMMON_PACKAGE_NAME)) {

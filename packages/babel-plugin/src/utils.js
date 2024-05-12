@@ -71,7 +71,7 @@ export const getModuleBindings = (path) => {
 
 // 生成callEntry表达式并包裹当前函数，如果有参与还需要处理参数
 export const wrapEntryFuncNode = ({ path, functionName, metaDataName, getInstanceName }) => {
-  const utils = getModuleBindings(path)
+  const utils = getOuterBingdings(path)
   const entryParam = getEntryParam({functionName, utils, metaDataName, getInstanceName})
   const entryAst = template.statement(`${CALLENTRY}(${entryParam})`)()
   const beforeEntryAst = template.statement(

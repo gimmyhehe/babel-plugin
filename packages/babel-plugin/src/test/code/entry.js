@@ -8,8 +8,14 @@ export const useRenderless = ({ props }) => {
   })
 
   const logMessage = () => {
+    const t = '123'
     console.log('我是纯函数我不需要闭包参数')
+    function aaa () {
+      const tttt = '23434'
+    }
   }
+
+  const aaa = 123
 
   const handleClick = (e) => {
     console.log(e.target)
@@ -20,7 +26,13 @@ export const useRenderless = ({ props }) => {
     })
   }
 
+  const bbb = 321
+
   const sendMessage = () => {
+    logMessage('自定义是的范德萨')
+  }
+
+  function ttt () {
     logMessage('自定义是的范德萨')
   }
 
