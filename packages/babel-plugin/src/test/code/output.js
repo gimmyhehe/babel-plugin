@@ -18,11 +18,6 @@ export const useRenderless = callEntry(({
     utils: {
       props,
       state,
-      logMessage,
-      aaa,
-      handleClick,
-      bbb,
-      sendMessage,
       ttt,
       reactive,
       deepCopy,
@@ -30,8 +25,54 @@ export const useRenderless = callEntry(({
     }
   });
   const logMessage = callEntry(() => {
-    const t = '123';
     console.log('我是纯函数我不需要闭包参数');
+    beforeCallEntry({
+      _metaData: {
+        id: `${_metaData.id}.aaa`
+      },
+      instance: _getCurrentInstance(),
+      utils: {
+        props,
+        state,
+        logMessage,
+        ttt,
+        reactive,
+        deepCopy,
+        useRenderless
+      }
+    });
+    const aaa = callEntry(() => {
+      const tttt = '23434';
+    }, {
+      _metaData: {
+        id: `${_metaData.id}.aaa`
+      },
+      instance: _getCurrentInstance(),
+      utils: {
+        props,
+        state,
+        logMessage,
+        ttt,
+        reactive,
+        deepCopy,
+        useRenderless
+      }
+    });
+    afterCallEntry({
+      _metaData: {
+        id: `${_metaData.id}.aaa`
+      },
+      instance: _getCurrentInstance(),
+      utils: {
+        props,
+        state,
+        logMessage,
+        ttt,
+        reactive,
+        deepCopy,
+        useRenderless
+      }
+    });
   }, {
     _metaData: {
       id: `${_metaData.id}.logMessage`
@@ -40,11 +81,6 @@ export const useRenderless = callEntry(({
     utils: {
       props,
       state,
-      logMessage,
-      aaa,
-      handleClick,
-      bbb,
-      sendMessage,
       ttt,
       reactive,
       deepCopy,
@@ -59,11 +95,6 @@ export const useRenderless = callEntry(({
     utils: {
       props,
       state,
-      logMessage,
-      aaa,
-      handleClick,
-      bbb,
-      sendMessage,
       ttt,
       reactive,
       deepCopy,
@@ -81,9 +112,6 @@ export const useRenderless = callEntry(({
       state,
       logMessage,
       aaa,
-      handleClick,
-      bbb,
-      sendMessage,
       ttt,
       reactive,
       deepCopy,
@@ -107,9 +135,6 @@ export const useRenderless = callEntry(({
       state,
       logMessage,
       aaa,
-      handleClick,
-      bbb,
-      sendMessage,
       ttt,
       reactive,
       deepCopy,
@@ -126,9 +151,6 @@ export const useRenderless = callEntry(({
       state,
       logMessage,
       aaa,
-      handleClick,
-      bbb,
-      sendMessage,
       ttt,
       reactive,
       deepCopy,
@@ -148,7 +170,6 @@ export const useRenderless = callEntry(({
       aaa,
       handleClick,
       bbb,
-      sendMessage,
       ttt,
       reactive,
       deepCopy,
@@ -169,7 +190,6 @@ export const useRenderless = callEntry(({
       aaa,
       handleClick,
       bbb,
-      sendMessage,
       ttt,
       reactive,
       deepCopy,
@@ -188,7 +208,6 @@ export const useRenderless = callEntry(({
       aaa,
       handleClick,
       bbb,
-      sendMessage,
       ttt,
       reactive,
       deepCopy,

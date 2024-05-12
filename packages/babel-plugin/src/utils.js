@@ -58,6 +58,41 @@ export const getOuterBingdings = (path) => {
   return outerBindings
 }
 
+// 获取当前上下文已经可以使用的scope变量
+export const getValidBingdinngs = ({path, state, functionName}) => {
+  const validBindings = {};
+  const { varDeclartion } = state;
+  // const block = path.parentPath.scope.block;
+  let varArr = [];
+  let parentPath = path.parentPath;
+  let block;
+  while (parentPath) {
+    const newBlock = parentPath.scope.block;
+    parentPath = parentPath.parentPath;
+    if (newBlock === block) {
+      continue;
+    }
+    block = newBlock;
+    varArr = varArr.concat(varDeclartion.get(block))
+  }
+
+  const allBindings = path.scope.getAllBindings();
+  const selfBindings = path.scope.bindings;
+  Object.keys(allBindings).forEach((key) => {
+    if (selfBindings[key]) {
+      return
+    }
+    const value = allBindings[key]
+    // 如果是变量定义，并且此时还没有初始化，则过滤掉
+    if (['var', 'const', 'let'].includes(value.kind) && !varArr.includes(key) || key === functionName) {
+      return
+    }
+    validBindings[key] = value;
+    
+  });
+  return validBindings;
+};
+
 export const getModuleBindings = (path) => {
   const moduleBindings = {}
   const allBindings = path.scope.getAllBindings()
@@ -70,8 +105,8 @@ export const getModuleBindings = (path) => {
 }
 
 // 生成callEntry表达式并包裹当前函数，如果有参与还需要处理参数
-export const wrapEntryFuncNode = ({ path, functionName, metaDataName, getInstanceName }) => {
-  const utils = getOuterBingdings(path)
+export const wrapEntryFuncNode = ({ path, functionName, metaDataName, getInstanceName, state }) => {
+  const utils = getValidBingdinngs({path, state, functionName})
   const entryParam = getEntryParam({functionName, utils, metaDataName, getInstanceName})
   const entryAst = template.statement(`${CALLENTRY}(${entryParam})`)()
   const beforeEntryAst = template.statement(

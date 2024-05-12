@@ -50,13 +50,8 @@ export const transform = (code, id) => {
 
       // 只有拿到函数的名称才可以被复写
       if (functionName) {
-        
-        const allBindings = path.scope.getAllBindings()
-        const selfBindings = path.scope.bindings
-        const varDeclartion = state.varDeclartion
-        console.log(allBindings.aaa.value)
-        debugger
-        wrapEntryFuncNode({ path, functionName, metaDataName: state.metaDataName, getInstanceName: state.getInstanceName })
+      
+        wrapEntryFuncNode({ path, functionName, metaDataName: state.metaDataName, getInstanceName: state.getInstanceName, state })
       }
     },
     VariableDeclaration(path) {
